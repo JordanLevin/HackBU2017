@@ -43,50 +43,62 @@ var milkshake = mongoose.Schema({
 });
 var stuff = mongoose.model('stuff', milkshake);
 
+//total list of flavors
+var flavors = ["Vanilla", "Strawberry", "Chocolate", "Cookie Dough", "Caramel", "Mint"];
+
+
+/*setTimeout(function(){
+    resetData();
+}, 3600 * 24 * 1000);*/
+
 
 function resetData(){
 
-        request('http://localhost:3000/completeFlavorList', function (error, response, body) {
-            stuff.remove({}, function(err) {
-                console.log('collection removed')
-            });
-            //console.log(response);
-            //console.log(body);
+    stuff.remove({}, function(err) {
+        console.log('collection removed')
+    });
 
-            for (var i in body){
-                if (body.hasOwnProperty(i)) {
-                    console.log(i + " -> " + body[i]);
-                }
-                //console.log(i);
-            }
-            //console.log(error);
-            /*body.forEach(body.Milkshakes, function () {
-                var data = new stuff({
-                    flavor: this.Flavor,
-                    points: 0
-                });
-                data.save();
+    for(var i in flavors){
 
-            });*/
+        var data = new stuff({
+            flavor: flavors[i],
+            points: 0
         });
+        data.save();
+    }
 
 }
-resetData();
+
 
 
 
 //take a post request with flavor
 app.post('/submit-flavor', function(req, res){
-  var data = new stuff({
-    flavor: req.body.flavor,
-    points: req.body.points
-  });
+    var id = req.body.id;
+    //console.log(id);
+    var temp;
+    stuff.findOne({_id: id}, function(err, data){
+       temp =  data;
+        //console.log(temp);
+        var p = temp.points;
+        //console.log(p);
 
-  f.save(function(err){
-    if(err) return console.error(err);
-    console.log("saving choices to database");
-    return res.redirect(303, '/');
-  });
+        stuff.update({ _id: id }, { $set: { points: p+1  }}, function(err, data){
+            //does anything go in here?
+        });
+    });
+
+
+    /*var data = new stuff({
+        flavor: req.body.flavor,
+        points: req.body.points
+    });
+
+    f.save(function(err){
+        if(err) return console.error(err);
+        console.log("saving choices to database");
+        return res.redirect(303, '/');
+    });*/
 
 });
 app.get('/flavors', function(req, res){
@@ -99,28 +111,13 @@ app.get('/', function(req, res, next) {
     });
     res.render('index', { title: 'Express' });
 });
-app.get('/completeFlavorList', function(req, res){
-    res.json({
-      "Milkshakes": {
-          "Vanilla":{
-                "Flavor":"Vanilla"
-          },
-          "Stawberry":{
-              "Flavor":"Strawberry"
-          },
-          "Chocolate":{
-              "Flavor":"Chocolate"
-          },
-          "Cookie Dough":{
-              "Flavor":"Cookie Dough"
-          },
-          "Caramel":{
-              "Flavor":"Caramel"
-          },
-          "Mint":{
-              "Flavor":"Mint"
-          },
-      }
+
+
+
+app.get('/flavorList', function(req, res){
+    stuff.find(function(err, milkshakes){
+        //console.log(milkshakes);
+        res.json(milkshakes);
     });
 });
 
