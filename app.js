@@ -44,8 +44,9 @@ var milkshake = mongoose.Schema({
 var stuff = mongoose.model('stuff', milkshake);
 
 //total list of flavors
-var flavors = ["Vanilla", "Strawberry", "Chocolate", "Cookie Dough", "Caramel", "Mint"];
+var flavors = ["Vanilla", "Strawberry", "Chocolate", "Cookie Dough", "Caramel", "Mint", "Phish Food", "Cookies and Cream", "Chocolate Therapy", "Coffee"];
 
+resetData();
 
 /*setTimeout(function(){
     resetData();
@@ -85,20 +86,10 @@ app.post('/submit-flavor', function(req, res){
 
         stuff.update({ _id: id }, { $set: { points: p+1  }}, function(err, data){
             //does anything go in here?
+            res.send('ok');
         });
     });
 
-
-    /*var data = new stuff({
-        flavor: req.body.flavor,
-        points: req.body.points
-    });
-
-    f.save(function(err){
-        if(err) return console.error(err);
-        console.log("saving choices to database");
-        return res.redirect(303, '/');
-    });*/
 
 });
 app.get('/flavors', function(req, res){
@@ -119,6 +110,7 @@ app.get('/flavorList', function(req, res){
         //console.log(milkshakes);
         res.json(milkshakes);
     });
+
 });
 
 

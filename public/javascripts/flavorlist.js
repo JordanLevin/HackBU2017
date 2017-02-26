@@ -34,12 +34,14 @@ function listFlavors() {
 };
 
 function upvoteFlavor(){
-    console.log('test');
+    console.log('upvoteFlavor');
     $.ajax({
         type: 'POST',
         data: {'id': $(this).attr('rel')},
-        url: '/submit-flavor',
-        dataType: 'JSON'
-    })
-    listFlavors();
+        url: '/submit-flavor'
+    }).done(function(response){
+        console.log('done');
+        listFlavors();
+    });
+
 }
