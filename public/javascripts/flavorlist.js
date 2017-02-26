@@ -72,6 +72,7 @@ function listFlavors() {
 };
 
 function upvoteFlavor(){
+    $(this).attr("disabled",true);
     console.log('upvoteFlavor');
     $.ajax({
         type: 'POST',

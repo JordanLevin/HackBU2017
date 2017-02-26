@@ -121,7 +121,7 @@ app.post('/submit-flavor', function(req, res){
 
 });
 app.get('/flavors', function(req, res){
-    res.render('flavors', {isindex: false});
+    res.render('flavors', {isindex: false, title1: "Choose which milkshake flavors are available"});
 });
 /* GET home page. */
 app.get('/', function(req, res, next) {
@@ -129,7 +129,7 @@ app.get('/', function(req, res, next) {
        console.log(milkshakes);
     });
     res.render('index', { title: 'Express' });*/
-    res.render('flavors', {isindex: true }); //CHANGE THIS TO TRUE LATER MAYBE?!?!
+    res.render('flavors', {isindex: true,  title1: "These milkshake flavors are available at C4" });
 });
 
 
