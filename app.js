@@ -75,32 +75,61 @@ function resetData(){
 
 //take a post request with flavor
 app.post('/submit-flavor', function(req, res){
-    var id = req.body.id;
-    //console.log(id);
-    var temp;
-    stuff.findOne({_id: id}, function(err, data){
-       temp =  data;
-        //console.log(temp);
-        var p = temp.points;
-        //console.log(p);
 
-        stuff.update({ _id: id }, { $set: { points: p+1  }}, function(err, data){
-            //does anything go in here?
-            res.send('ok');
+
+    var id = req.body.id;
+
+
+    //COOKIE STUFF
+    //set idlist to the clients idlist cookie
+    var idList = req.cookies.id;
+    console.log(idList);
+    if(idList == null){
+        idList = [];
+    }
+    if(idList.indexOf(id)==-1){
+    //if(!idList.contains(id)) {
+    //add the new id to the idlist
+    idList.push(id);
+
+    //update the client's cookie with the new idlist
+    res.clearCookie('id');
+    res.cookie('id', idList, {maxAge: 72000000});
+    //console.log(id);
+
+
+    //if the list doesn't have the id sent then do the stuff
+
+    var temp;
+
+        stuff.findOne({_id: id}, function (err, data) {
+            temp = data;
+            //console.log(temp);
+            var p = temp.points;
+            //console.log(p);
+
+            stuff.update({_id: id}, {$set: {points: p + 1}}, function (err, data) {
+                //does anything go in here?
+                res.send('ok');
+            });
         });
-    });
+    }
+    else{
+        res.send('user has already voted for this today');
+    }
 
 
 });
 app.get('/flavors', function(req, res){
-    res.render('flavors');
+    res.render('flavors', {isindex: false});
 });
 /* GET home page. */
 app.get('/', function(req, res, next) {
-    stuff.find(function(err, milkshakes){
+    /*stuff.find(function(err, milkshakes){
        console.log(milkshakes);
     });
-    res.render('index', { title: 'Express' });
+    res.render('index', { title: 'Express' });*/
+    res.render('flavors', {isindex: true }); //CHANGE THIS TO TRUE LATER MAYBE?!?!
 });
 
 
